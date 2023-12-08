@@ -12,12 +12,12 @@ class NauchnyiCenterRepository(implicit ec: ExecutionContext, db: MongoDatabase)
 
   val centerCollection: MongoCollection[Document] = db.getCollection("nauchnyi_center")
 
-  def getAllCenters(): Future[List[Nauchnyi_center]] = {
+  def getAllCenters(): Future[List[Nauchnyicenter]] = {
     val futureCenters = centerCollection.find().toFuture()
 
     futureCenters.map { docs =>
       Option(docs).map(_.map { doc =>
-        Nauchnyi_center(
+        Nauchnyicenter(
           centerId = doc.getInteger("centerId"),
           name = doc.getString("name")
         )
@@ -25,13 +25,13 @@ class NauchnyiCenterRepository(implicit ec: ExecutionContext, db: MongoDatabase)
     }
   }
 
-  def getCenterById(centerId: String): Future[Option[Nauchnyi_center]] = {
+  def getCenterById(centerId: String): Future[Option[Nauchnyicenter]] = {
     val centerDocument = Document("centerId" -> centerId.toInt)
 
     centerCollection.find(centerDocument).headOption().map {
       case Some(doc) =>
         Some(
-          Nauchnyi_center(
+          Nauchnyicenter(
             centerId = doc.getInteger("centerId"),
             name = doc.getString("name")
           )
@@ -40,7 +40,7 @@ class NauchnyiCenterRepository(implicit ec: ExecutionContext, db: MongoDatabase)
     }
   }
 
-  def addCenter(center: Nauchnyi_center): Future[String] = {
+  def addCenter(center: Nauchnyicenter): Future[String] = {
     val centerDocument = Document(
       "centerId" -> center.centerId,
       "name" -> center.name
@@ -54,7 +54,7 @@ class NauchnyiCenterRepository(implicit ec: ExecutionContext, db: MongoDatabase)
     centerCollection.deleteOne(centerDocument).toFuture().map(_ => s"Научный центр с id ${centerId} был удален из базы данных.")
   }
 
-  def updateCenter(centerId: String, updatedCenter: Nauchnyi_center): Future[String] = {
+  def updateCenter(centerId: String, updatedCenter: Nauchnyicenter): Future[String] = {
     val filter = Document("centerId" -> centerId.toInt)
 
     val centerDocument = Document(

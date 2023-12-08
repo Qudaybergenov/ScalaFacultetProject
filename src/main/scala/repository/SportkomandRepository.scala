@@ -14,12 +14,12 @@ class SportKomandRepository(implicit ec: ExecutionContext, db: MongoDatabase) {
 
   val sportKomandCollection: MongoCollection[Document] = db.getCollection("sport_komands")
 
-  def getAllSportKomands(): Future[List[Sport_komand]] = {
+  def getAllSportKomands(): Future[List[Sportkomand]] = {
     val futureSportKomands = sportKomandCollection.find().toFuture()
 
     futureSportKomands.map { docs =>
       Option(docs).map(_.map { doc =>
-        Sport_komand(
+        Sportkomand(
           komandID = doc.getInteger("komandID"),
           name = doc.getString("name"),
           vid_sporta = doc.getString("vid_sporta")
@@ -28,13 +28,13 @@ class SportKomandRepository(implicit ec: ExecutionContext, db: MongoDatabase) {
     }
   }
 
-  def getSportKomandById(komandID: String): Future[Option[Sport_komand]] = {
+  def getSportKomandById(komandID: String): Future[Option[Sportkomand]] = {
     val sportKomandDocument = Document("komandID" -> komandID.toInt)
 
     sportKomandCollection.find(sportKomandDocument).headOption().map {
       case Some(doc) =>
         Some(
-          Sport_komand(
+          Sportkomand(
             komandID = doc.getInteger("komandID"),
             name = doc.getString("name"),
             vid_sporta = doc.getString("vid_sporta")
@@ -69,13 +69,13 @@ class SportKomandRepository(implicit ec: ExecutionContext, db: MongoDatabase) {
 //    }
 
 
-  def getSportKomandByName(typeSport: String): Future[List[Option[Sport_komand]]] = {
+  def getSportKomandByName(typeSport: String): Future[List[Option[Sportkomand]]] = {
     val sportKomandDocument = equal("vid_sporta", typeSport)
 
     sportKomandCollection.find(sportKomandDocument).toFuture().map { docs =>
       docs.map { doc =>
         Some(
-          Sport_komand(
+          Sportkomand(
             komandID = doc.getInteger("komandID"),
             name = doc.getString("name"),
             vid_sporta = doc.getString("vid_sporta")
@@ -91,7 +91,7 @@ class SportKomandRepository(implicit ec: ExecutionContext, db: MongoDatabase) {
 //        vid_sporta = doc.getString("vid_sporta")
 //      )
 //    )
-    def addSportKomand(sportKomand: Sport_komand): Future[String] = {
+    def addSportKomand(sportKomand: Sportkomand): Future[String] = {
       val sportKomandDocument = Document(
         "komandID" -> sportKomand.komandID,
         "name" -> sportKomand.name,
@@ -106,7 +106,7 @@ class SportKomandRepository(implicit ec: ExecutionContext, db: MongoDatabase) {
       sportKomandCollection.deleteOne(sportKomandDocument).toFuture().map(_ => s"Спортивная команда с id ${komandID} была удалена из базы данных.")
     }
 
-    def updateSportKomand(komandID: String, updatedSportKomand: Sport_komand): Future[String] = {
+    def updateSportKomand(komandID: String, updatedSportKomand: Sportkomand): Future[String] = {
       val filter = Document("komandID" -> komandID.toInt)
 
       val sportKomandDocument = Document(

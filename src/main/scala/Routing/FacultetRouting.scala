@@ -11,6 +11,11 @@ class FacultetRoutes(implicit val facultetRepository: FacultetRepository) extend
   val route =
     pathPrefix("facultet") {
       concat(
+        get {
+          parameter("param") { param =>
+            complete(facultetRepository.facultetfiltr(param.toString))
+          }
+        },
         pathEnd {
           concat(
             get {
@@ -29,9 +34,7 @@ class FacultetRoutes(implicit val facultetRepository: FacultetRepository) extend
               complete(facultetRepository.getFacultetById(facultetId))
             },
             put {
-              println("revsd")
               entity(as[Facultet]) { updatedFacultet =>
-                println("revsd")
 
                 complete(facultetRepository.updateFacultet(facultetId, updatedFacultet))
               }

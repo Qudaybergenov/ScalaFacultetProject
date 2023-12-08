@@ -7,7 +7,7 @@ import Model._
 
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import java.util.Date
-import Model.{Kurs, Pol, Status, Uroven_angl}
+import Model._
 import akka.http.scaladsl.Http
 object Main extends App {
 
@@ -37,7 +37,7 @@ object Main extends App {
 
 
   // Старт сервера
-  private val bindingFuture = Http().bindAndHandle(facultetRoute.route, "localhost", 8080)
+  private val bindingFuture = Http().bindAndHandle(sportKomandRoutes.route, "localhost", 8080)
 
   println(s"Server online at http://localhost:8080/")
 

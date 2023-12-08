@@ -2,7 +2,7 @@ package Routing
 
 import akka.http.scaladsl.server.Directives._
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport
-import org.json4s.{DefaultFormats, jackson}
+import org.json4s.{DefaultFormats, Formats, jackson}
 import repository.StudentRepository
 import Model._
 

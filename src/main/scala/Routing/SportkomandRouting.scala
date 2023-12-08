@@ -27,7 +27,7 @@ class SportKomandRoutes(implicit val sportKomandRepository: SportKomandRepositor
               complete(sportKomandRepository.getAllSportKomands())
             },
             post {
-              entity(as[Sport_komand]) { sportKomand =>
+              entity(as[Sportkomand]) { sportKomand =>
                 complete(sportKomandRepository.addSportKomand(sportKomand))
               }
             }
@@ -40,7 +40,7 @@ class SportKomandRoutes(implicit val sportKomandRepository: SportKomandRepositor
               complete(sportKomandRepository.getSportKomandById(komandID))
             },
             put {
-              entity(as[Sport_komand]) { updatedSportKomand =>
+              entity(as[Sportkomand]) { updatedSportKomand =>
                 complete(sportKomandRepository.updateSportKomand(komandID, updatedSportKomand))
               }
             },

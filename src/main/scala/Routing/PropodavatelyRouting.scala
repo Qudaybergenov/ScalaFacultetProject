@@ -2,7 +2,7 @@ package Routing
 
 import akka.http.scaladsl.server.Directives._
 import de.heikoseeberger.akkahttpjson4s.Json4sSupport
-import org.json4s.{DefaultFormats, jackson}
+import org.json4s.{DefaultFormats, Formats, jackson}
 import repository.PrepodavatelyRepository
 import Model._
 
@@ -11,7 +11,7 @@ class PrepodavatelyRoutes(implicit val prepodavatelyRepository: PrepodavatelyRep
   implicit val formats = DefaultFormats
 
   val route =
-    pathPrefix("prepodavateli") {
+    pathPrefix("prepodavately") {
       concat(
         pathEnd {
           concat(

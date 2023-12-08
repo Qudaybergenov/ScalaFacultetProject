@@ -1,6 +1,6 @@
 package Model
 
-case class Nauchnyi_center(
+case class Nauchnyicenter(
                            centerId:Int,
                            name:String,
                            )

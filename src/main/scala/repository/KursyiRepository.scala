@@ -21,36 +21,22 @@ class KursyiRepository(implicit ec: ExecutionContext, db: MongoDatabase) {
     futureKursyi.map { docs =>
       Option(docs).map(_.map { doc =>
         Kursyi(
-          kursId = doc.getString("kursId"),
-          name = doc.getString("name"),
-          opicanyia = doc.getString("opicanyia"),
-          prepodavatel = Option(doc.getList("prepodavatel", classOf[String])).map(_.asScala.toList).getOrElse(List.empty),
-          spisok_studentov = Option(doc.getList("spisok_studentov", classOf[String])).map(_.asScala.toList).getOrElse(List.empty),
-          mesto_provedenya = doc.getString("mesto_provedenya"),
-          vremyia_provedenya = doc.getString("vremyia_provedenya"),
-          status = KursStatus.withName(doc.getString("status")),
-          kontaktnayia_info = doc.getString("kontaktnayia_info")
+          kursId = doc.getInteger("kursId"),
+          status = KursStatus.withName(doc.getString("status"))
         )
       }.toList).getOrElse(List.empty)
     }
   }
 
   def getKursyiById(kursId: String): Future[Option[Kursyi]] = {
-    val kursyiDocument = Document("kursId" -> kursId)
+    val kursyiDocument = Document("kursId" -> kursId.toInt)
 
     kursyiCollection.find(kursyiDocument).headOption().map {
       case Some(doc) =>
         Some(
           Kursyi(
-            kursId = doc.getString("kursId"),
-            name = doc.getString("name"),
-            opicanyia = doc.getString("opicanyia"),
-            prepodavatel = Option(doc.getList("prepodavatel", classOf[String])).map(_.asScala.toList).getOrElse(List.empty),
-            spisok_studentov = Option(doc.getList("spisok_studentov", classOf[String])).map(_.asScala.toList).getOrElse(List.empty),
-            mesto_provedenya = doc.getString("mesto_provedenya"),
-            vremyia_provedenya = doc.getString("vremyia_provedenya"),
-            status = KursStatus.withName(doc.getString("status")),
-            kontaktnayia_info = doc.getString("kontaktnayia_info")
+            kursId = doc.getInteger("kursId"),
+            status = KursStatus.withName(doc.getString("status"))
           )
         )
       case None => None
@@ -60,38 +46,24 @@ class KursyiRepository(implicit ec: ExecutionContext, db: MongoDatabase) {
   def addKursyi(kursyi: Kursyi): Future[String] = {
     val kursyiDocument = Document(
       "kursId" -> kursyi.kursId,
-      "name" -> kursyi.name,
-      "opicanyia" -> kursyi.opicanyia,
-      "prepodavatel" -> kursyi.prepodavatel,
-      "spisok_studentov" -> kursyi.spisok_studentov,
-      "mesto_provedenya" -> kursyi.mesto_provedenya,
-      "vremyia_provedenya" -> kursyi.vremyia_provedenya,
       "status" -> kursyi.status.toString,
-      "kontaktnayia_info" -> kursyi.kontaktnayia_info
     )
 
-    kursyiCollection.insertOne(kursyiDocument).toFuture().map(_ => s"Курс - ${kursyi.name} был добавлен в базу данных.")
+    kursyiCollection.insertOne(kursyiDocument).toFuture().map(_ => s"Курс - ${kursyi.kursId} был добавлен в базу данных.")
   }
 
   def deleteKursyi(kursId: String): Future[String] = {
-    val kursyiDocument = Document("kursId" -> kursId)
+    val kursyiDocument = Document("kursId" -> kursId.toInt)
     kursyiCollection.deleteOne(kursyiDocument).toFuture().map(_ => s"Курс с id ${kursId} был удален из базы данных.")
   }
 
   def updateKursyi(kursId: String, updatedKursyi: Kursyi): Future[String] = {
-    val filter = Document("kursId" -> kursId)
+    val filter = Document("kursId" -> kursId.toInt)
 
     val kursyiDocument = Document(
       "$set" -> Document(
         "kursId" -> updatedKursyi.kursId,
-        "name" -> updatedKursyi.name,
-        "opicanyia" -> updatedKursyi.opicanyia,
-        "prepodavatel" -> updatedKursyi.prepodavatel,
-        "spisok_studentov" -> updatedKursyi.spisok_studentov,
-        "mesto_provedenya" -> updatedKursyi.mesto_provedenya,
-        "vremyia_provedenya" -> updatedKursyi.vremyia_provedenya,
-        "status" -> updatedKursyi.status.toString,
-        "kontaktnayia_info" -> updatedKursyi.kontaktnayia_info
+        "status" -> updatedKursyi.status.toString
       )
     )
 

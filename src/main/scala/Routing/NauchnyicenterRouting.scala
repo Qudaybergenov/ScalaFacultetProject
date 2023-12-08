@@ -19,7 +19,7 @@ class NauchnyiCenterRoutes(implicit val centerRepository: NauchnyiCenterReposito
               complete(centerRepository.getAllCenters())
             },
             post {
-              entity(as[Nauchnyi_center]) { center =>
+              entity(as[Nauchnyicenter]) { center =>
                 complete(centerRepository.addCenter(center))
               }
             }
@@ -31,7 +31,7 @@ class NauchnyiCenterRoutes(implicit val centerRepository: NauchnyiCenterReposito
               complete(centerRepository.getCenterById(centerId))
             },
             put {
-              entity(as[Nauchnyi_center]) { updatedCenter =>
+              entity(as[Nauchnyicenter]) { updatedCenter =>
                 complete(centerRepository.updateCenter(centerId, updatedCenter))
               }
             },
